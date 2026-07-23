@@ -1,0 +1,55 @@
+.collection {
+  width: 100%;
+  padding: 80px 0 40px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.collection-content {
+  width: 90%;
+  margin: auto;
+}
+
+.collection-title {
+  font-size: 50px;
+  color: #183026;
+  margin-bottom: 20px;
+}
+
+.collection-text {
+  max-width: 700px;
+  margin: auto;
+  color: #666;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.category-buttons {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.category-buttons button {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 30px;
+  background: #f3f3f3;
+  color: #183026;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: 600;
+}
+
+.category-buttons button:hover {
+  background: #183026;
+  color: white;
+}
+
+.category-buttons button.active {
+  background: #183026;
+  color: white;
+}
