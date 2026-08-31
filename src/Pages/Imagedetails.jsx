@@ -27,9 +27,9 @@ function ImageDetails() {
 
         
 
-        <h2>About This View</h2>
+       
 
-{/* Nature */}
+
 
 {image.category === "Nature" && (
   <>
@@ -67,7 +67,7 @@ function ImageDetails() {
   </>
 )}
 
-{/* Travel */}
+
 
 {image.category === "Travel" && (
   <>
@@ -121,7 +121,7 @@ function ImageDetails() {
   </>
 )}
 
-{/* Food */}
+
 
 {image.category === "Food" && (
   <>
@@ -167,7 +167,7 @@ function ImageDetails() {
   </>
 )}
 
-{/* Wildlife */}
+
 
 {image.category === "Wildlife" && (
   <>
@@ -201,7 +201,7 @@ function ImageDetails() {
   </>
 )}
 
-{/* City */}
+
 
 {image.category === "City" && (
   <>

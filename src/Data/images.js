@@ -1,34 +1,34 @@
-// Nature
+
 import nature1 from "../assets/nature/nature_image1.jpg";
 import nature2 from "../assets/nature/nature_image2.jpg";
 import nature3 from "../assets/nature/nature_image3.jpg";
 import nature4 from "../assets/nature/nature_image4.jpg";
 
-// Travel
+
 import travel1 from "../assets/Travel/travel_image1.jpg";
 import travel2 from "../assets/Travel/travel_image2.jpg";
 import travel3 from "../assets/Travel/travel_image3.jpg";
 import travel4 from "../assets/Travel/travel_image4.jpg";
 
-// Food
+
 import food1 from "../assets/food/food_image1.jpg";
 import food2 from "../assets/food/food_image2.jpg";
 import food3 from "../assets/food/food_image3.jpg";
 import food4 from "../assets/food/food_image4.jpg";
 
-// Wildlife
+
 import wildlife1 from "../assets/wildlife/wildlife_image1.jpg";
 import wildlife2 from "../assets/wildlife/wildlife_image2.jpg";
 import wildlife3 from "../assets/wildlife/wildlife_image3.jpg";
 import wildlife4 from "../assets/wildlife/wildlife_image4.jpg";
 
-// City
+
 import city1 from "../assets/city/city_image1.jpg";
 import city2 from "../assets/city/city_image2.jpg";
 import city3 from "../assets/city/city_image3.jpg";
 import city4 from "../assets/city/city_image4.jpg";
 const images = [
-  // Nature
+
   {
   id: 1,
   image: nature1,
@@ -154,7 +154,7 @@ const images = [
   ]
 },
 
-  // Travel
+
 {
   id: 5,
   image: travel1,
@@ -340,7 +340,7 @@ const images = [
   ]
 },
 
-  // Food
+ 
   {
   id: 9,
   image: food1,
