@@ -9,7 +9,7 @@ body{
     font-family:Georgia, serif;
 }
 
-/* ================= NAVBAR ================= */
+
 
 .navbar{
     width:100%;
@@ -33,7 +33,7 @@ margin: 0px auto 10px;
     transition:.3s;
 }
 
-/* ================= LOGO ================= */
+
 
 .logo{
     display:flex;
@@ -52,7 +52,7 @@ margin: 0px auto 10px;
     font-weight:700;
 }
 
-/* ================= MENU ================= */
+
 
 .nav-links{
     display:flex;
@@ -79,7 +79,7 @@ margin: 0px auto 10px;
     transition:.3s;
 }
 
-/* Underline Animation */
+
 
 .nav-links li a::after{
 
@@ -109,7 +109,7 @@ margin: 0px auto 10px;
     color:#d8f3dc;
 }
 
-/* ================= MENU ICON ================= */
+
 
 .menu-icon{
 
@@ -129,7 +129,7 @@ margin: 0px auto 10px;
     color:#d8f3dc;
 }
 
-/* ================= RESPONSIVE ================= */
+
 
 @media(max-width:992px){
 

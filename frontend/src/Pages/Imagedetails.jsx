@@ -25,13 +25,7 @@ function ImageDetails() {
 
         <span className="category">{image.category}</span>
 
-        
-
-       
-
-
-
-{image.category === "Nature" && (
+  {image.category === "Nature" && (
   <>
     <h2>🌿 About This View</h2>
 

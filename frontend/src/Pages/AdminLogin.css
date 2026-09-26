@@ -1,0 +1,77 @@
+.admin-login-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f5f5;
+}
+
+.admin-login-card {
+  width: 380px;
+  padding: 40px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
+}
+
+.admin-login-card h1 {
+  text-align: center;
+  color: #183026;
+  margin-bottom: 10px;
+}
+
+.admin-login-card > p {
+  text-align: center;
+  color: #777;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #183026;
+  font-weight: 600;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: #183026;
+}
+
+.admin-login-btn {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 8px;
+  background: #183026;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.admin-login-btn:hover {
+  background: #244738;
+}
+
+.user-login-text {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.user-login-text a {
+  color: #183026;
+  font-weight: 600;
+  text-decoration: none;
+}
