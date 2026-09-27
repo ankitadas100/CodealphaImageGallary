@@ -23,6 +23,7 @@ router.post("/upload", upload.single("image"), async (req, res) => {
       title: req.body.title,
       category: req.body.category,
       description: req.body.description,
+      location: req.body.location,
       imageUrl: `/uploads/${req.file.filename}`,
       uploadedBy: decoded.id,
     });
@@ -52,6 +53,44 @@ router.get("/my-uploads", async (req, res) => {
     res.status(500).json({
       message: "Failed to fetch uploads",
     });
+  }
+});
+router.patch("/approve/:id", async (req, res) => {
+  await Image.findByIdAndUpdate(req.params.id, {
+    status: "approved",
+  });
+
+  res.json({ message: "Image approved successfully" });
+});
+router.get("/all", async (req, res) => {
+  try {
+    const images = await Image.find().populate("uploadedBy", "name email");
+    res.json(images);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch images",
+    });
+  }
+});
+router.patch("/reject/:id", async (req, res) => {
+  await Image.findByIdAndDelete(req.params.id);
+
+  res.json({ message: "Image rejected successfully" });
+});
+router.get("/approved", async (req, res) => {
+  const images = await Image.find({ status: "approved" });
+  res.json(images);
+});
+router.get("/:id", async (req, res) => {
+  try {
+    const image = await Image.findById(req.params.id).populate(
+      "uploadedBy",
+      "name email"
+    );
+
+    res.json(image);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch image" });
   }
 });
 

@@ -15,6 +15,9 @@ const imageSchema = new mongoose.Schema(
     description: {
       type: String,
     },
+    location: {
+      type: String,
+    },
 
     imageUrl: {
       type: String,
@@ -26,8 +29,16 @@ const imageSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+
+    status: {
+      type: String,
+      enum: ["pending", "approved"],
+      default: "pending",
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 module.exports = mongoose.model("Image", imageSchema);

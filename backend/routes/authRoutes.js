@@ -78,4 +78,56 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+router.get("/users", async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded.role !== "admin") {
+      return res.status(403).json({ message: "Admin access required" });
+    }
+
+    const users = await User.find().select("-password");
+
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch users" });
+  }
+});
+router.delete("/users/:id", async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded.role !== "admin") {
+      return res.status(403).json({
+        message: "Admin access required",
+      });
+    }
+
+    if (decoded.id === req.params.id) {
+      return res.status(400).json({
+        message: "You cannot delete yourself",
+      });
+    }
+
+    await User.findByIdAndDelete(req.params.id);
+
+    res.json({
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to delete user",
+    });
+  }
+});
+router.get("/all", async (req, res) => {
+  try {
+    const images = await Image.find().populate("uploadedBy", "name email");
+    res.json(images);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch images" });
+  }
+});
 module.exports = router;

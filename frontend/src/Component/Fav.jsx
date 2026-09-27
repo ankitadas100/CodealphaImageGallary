@@ -36,7 +36,7 @@ function Fav({ favorites }) {
       </div>
 
       {favoriteImages.length === 0 ? (
-        <p>No favorite images yet.</p>
+        <p>No favorite images yet</p>
       ) : (
         <div className="gallery">
           {favoriteImages.map((item) => (
