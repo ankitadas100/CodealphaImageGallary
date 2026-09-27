@@ -1,23 +1,50 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Signup.css";
 
 function Signup() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    const response = await fetch("http://localhost:5000/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    const data = await response.json();
+
+    alert(data.message);
+  };
+
   return (
     <div className="signup-page">
-
       <div className="signup-card">
 
         <h1>Create Account</h1>
-
         <p>Join FrameFusion and explore photography</p>
 
-        <form>
+        <form onSubmit={handleSignup}>
 
           <div className="form-group">
             <label>Full Name</label>
             <input
               type="text"
               placeholder="Enter your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
 
@@ -26,6 +53,8 @@ function Signup() {
             <input
               type="email"
               placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -34,6 +63,8 @@ function Signup() {
             <input
               type="password"
               placeholder="Create a password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
@@ -42,6 +73,8 @@ function Signup() {
             <input
               type="password"
               placeholder="Confirm your password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
 
@@ -57,7 +90,6 @@ function Signup() {
         </p>
 
       </div>
-
     </div>
   );
 }

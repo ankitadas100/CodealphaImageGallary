@@ -1,22 +1,57 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import "./UploadImage.css";
 
 function UploadImage() {
+  const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
+
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
 
     if (file) {
+      setImage(file);
       setPreview(URL.createObjectURL(file));
     }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
+    try {
+      const formData = new FormData();
 
-    alert("Image upload feature will be connected to the backend soon.");
+      formData.append("image", image);
+      formData.append("title", title);
+      formData.append("category", category);
+      formData.append("description", description);
+      formData.append("location", location);
+
+      const response = await fetch(
+        "http://localhost:5000/api/images/upload",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+
+      alert(data.message);
+    } catch (error) {
+      alert("Upload error: " + error.message);
+    }
   };
 
   return (
@@ -36,7 +71,7 @@ function UploadImage() {
 
         <div className="upload-card">
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={(e) => e.preventDefault()}>
 
             <div className="image-upload-box">
               {preview ? (
@@ -48,12 +83,8 @@ function UploadImage() {
               ) : (
                 <>
                   <div className="upload-icon">📷</div>
-
                   <h3>Choose an Image</h3>
-
-                  <p>
-                    Upload a JPG, JPEG or PNG image.
-                  </p>
+                  <p>Upload a JPG, JPEG or PNG image.</p>
                 </>
               )}
 
@@ -61,6 +92,7 @@ function UploadImage() {
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
+                required
               />
             </div>
 
@@ -70,6 +102,8 @@ function UploadImage() {
               <input
                 type="text"
                 placeholder="Enter image title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 required
               />
             </div>
@@ -77,7 +111,11 @@ function UploadImage() {
             <div className="form-group">
               <label>Category</label>
 
-              <select required defaultValue="">
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                required
+              >
                 <option value="" disabled>
                   Select category
                 </option>
@@ -96,6 +134,8 @@ function UploadImage() {
               <textarea
                 placeholder="Write something about your image..."
                 rows="5"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 required
               ></textarea>
             </div>
@@ -106,17 +146,22 @@ function UploadImage() {
               <input
                 type="text"
                 placeholder="Enter location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
               />
             </div>
 
-            <button type="submit" className="upload-btn">
+            <button
+              type="button"
+              className="upload-btn"
+              onClick={handleSubmit}
+            >
               Upload Image
             </button>
 
           </form>
 
         </div>
-
       </div>
     </div>
   );

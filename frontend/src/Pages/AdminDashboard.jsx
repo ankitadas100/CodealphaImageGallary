@@ -1,186 +1,217 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 import "./AdminDashboard.css";
 
 function AdminDashboard() {
-  // These values will come from the backend/database later.
-  const totalUsers = 0;
-  const totalImages = 0;
-  const pendingUploads = 0;
+  const [users, setUsers] = useState([]);
+  const [images, setImages] = useState([]);
 
-  const users = [];
-  const uploads = [];
+  const user = JSON.parse(localStorage.getItem("user"));
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (user?.role !== "admin") return;
+
+    fetch("http://localhost:5000/api/auth/users", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setUsers(data));
+
+    fetch("http://localhost:5000/api/images/all")
+      .then((res) => res.json())
+      .then((data) => setImages(data));
+  }, []);
+
+  if (user?.role !== "admin") {
+    return <Navigate to="/login" replace />;
+  }
+
+  const totalUsers = users.length;
+  const totalImages = images.length;
+  const pendingUploads = images.filter(
+    (image) => image.status !== "approved"
+  ).length;
+
+  const handleDelete = async (id) => {
+    const response = await fetch(
+      `http://localhost:5000/api/auth/users/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    alert(data.message);
+
+    if (response.ok) {
+      setUsers((prev) =>
+        prev.filter((user) => user._id !== id)
+      );
+    }
+  };
+  const handleApprove = async (id) => {
+    const response = await fetch(
+      `http://localhost:5000/api/images/approve/${id}`,
+      { method: "PATCH" }
+    );
+
+    const data = await response.json();
+    alert(data.message);
+
+    if (response.ok) {
+      setImages((prev) =>
+        prev.map((image) =>
+          image._id === id
+            ? { ...image, status: "approved" }
+            : image
+        )
+      );
+    }
+  };
+
+  const handleReject = async (id) => {
+    const response = await fetch(
+      `http://localhost:5000/api/images/reject/${id}`,
+      { method: "PATCH" }
+    );
+
+    const data = await response.json();
+    alert(data.message);
+
+    if (response.ok) {
+      setImages((prev) =>
+        prev.filter((image) => image._id !== id)
+      );
+    }
+  };
 
   return (
     <div className="admin-dashboard-page">
-
       <div className="admin-dashboard-container">
 
-        {/* Header */}
         <div className="admin-dashboard-header">
-
           <div>
             <h1>Admin Dashboard</h1>
-            <p>
-              Manage FrameFusion users, images and uploads.
-            </p>
+            <p>Manage FrameFusion users and images.</p>
           </div>
 
-          <Link to="/" className="admin-home-btn">
-            ← Gallery
+          <Link to="/" className="admin-back-home-btn">
+            ← Home
           </Link>
-
         </div>
 
-        {/* Stats */}
         <div className="admin-stats">
 
-          <div className="stat-card">
-            <div className="stat-icon">👥</div>
+          <div className="admin-stat-card">
+            <div className="admin-stat-icon">👥</div>
             <h3>Total Users</h3>
-            <strong>{totalUsers}</strong>
+            <p>{totalUsers}</p>
           </div>
 
-          <div className="stat-card">
-            <div className="stat-icon">🖼️</div>
+          <div className="admin-stat-card">
+            <div className="admin-stat-icon">🖼️</div>
             <h3>Total Images</h3>
-            <strong>{totalImages}</strong>
+            <p>{totalImages}</p>
           </div>
 
-          <div className="stat-card">
-            <div className="stat-icon">⏳</div>
+          <div className="admin-stat-card">
+            <div className="admin-stat-icon">⏳</div>
             <h3>Pending Uploads</h3>
-            <strong>{pendingUploads}</strong>
+            <p>{pendingUploads}</p>
           </div>
 
         </div>
 
-        {/* Users */}
-        <section className="admin-section">
-
-          <div className="section-heading">
-            <div>
-              <h2>User Management</h2>
-              <p>View registered FrameFusion users.</p>
-            </div>
-          </div>
+        <div className="admin-section">
+          <h2>User Management</h2>
 
           {users.length === 0 ? (
-            <div className="admin-empty">
-              <span>👥</span>
-              <h3>No users yet</h3>
-              <p>
-                Registered users will appear here.
-              </p>
-            </div>
+            <p>No users found.</p>
           ) : (
-            <div className="admin-table-wrapper">
+            <div className="admin-list">
 
-              <table className="admin-table">
+              {users.map((user) => (
+                <div className="admin-list-item" key={user._id}>
 
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
+                  <div>
+                    <h3>{user.name}</h3>
+                    <p>{user.email}</p>
+                    <span>{user.role}</span>
+                  </div>
 
-                <tbody>
-                  {users.map((user) => (
-                    <tr key={user.id}>
-                      <td>{user.name}</td>
-                      <td>{user.email}</td>
-                      <td>{user.role}</td>
+                  <button
+                    className="admin-delete-btn"
+                    onClick={() => handleDelete(user._id)}
+                  >
+                    Delete
+                  </button>
 
-                      <td>
-                        <button className="delete-btn">
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-
-              </table>
+                </div>
+              ))}
 
             </div>
           )}
-
-        </section>
-
-        {/* Image Management */}
-        <section className="admin-section">
-
-          <div className="section-heading">
-            <div>
-              <h2>Image Management</h2>
-              <p>
-                Manage images uploaded by FrameFusion users.
-              </p>
-            </div>
-          </div>
-
-          {uploads.length === 0 ? (
-            <div className="admin-empty">
-              <span>🖼️</span>
-              <h3>No uploaded images yet</h3>
-              <p>
-                User uploads will appear here.
-              </p>
-            </div>
-          ) : (
-            <div className="admin-table-wrapper">
-
-              <table className="admin-table">
-
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>Uploaded By</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {uploads.map((upload) => (
-                    <tr key={upload.id}>
-                      <td>{upload.title}</td>
-                      <td>{upload.category}</td>
-                      <td>{upload.uploadedBy}</td>
-                      <td>{upload.status}</td>
-
-                      <td className="table-actions">
-                        <button className="approve-btn">
-                          Approve
-                        </button>
-
-                        <button className="delete-btn">
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-
-              </table>
-
-            </div>
-          )}
-
-        </section>
-
-        {/* Logout */}
-        <div className="admin-logout-section">
-          <Link to="/admin/login" className="admin-logout-btn">
-            Logout
-          </Link>
         </div>
 
-      </div>
+        <div className="admin-section">
+          <h2>Image Management</h2>
 
+          {images.length === 0 ? (
+            <div className="admin-empty-state">
+              <p>No uploaded images available yet.</p>
+            </div>
+          ) : (
+            <div className="admin-list">
+
+              {images.map((image) => (
+                <div className="admin-list-item" key={image._id}>
+
+                  <div>
+                    <h3>{image.title}</h3>
+                    <p>{image.category}</p>
+                    <span>
+                      Uploaded by: {image.uploadedBy?.name}
+                    </span>
+                  </div>
+                  {image.status === "pending" && (
+                    <>
+                      <button onClick={() => handleApprove(image._id)}>
+                        Approve
+                      </button>
+
+                      <button onClick={() => handleReject(image._id)}>
+                        Reject
+                      </button>
+                    </>
+                  )}
+
+                </div>
+              ))}
+
+            </div>
+          )}
+
+        </div>
+
+       <Link
+  to="/"
+  className="admin-logout-btn"
+  onClick={() => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  }}
+>
+  Logout
+</Link>
+
+      </div>
     </div>
   );
 }
